@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+</head>
+<body class="bg-gradient-to-r from-gray-300 to-yellow-500 flex items-center justify-center min-h-screen">
+
+  <div class="rounded-3xl shadow-2xl w-full max-w-md p-8 mx-4">
+   
+    <div class="flex justify-center mb-4">
+      <img src="images/createAcc.gif" alt="Create Account Animation" class="w-60 h-50 bg-transparent border-none" />
+    </div>
+
+    <h2 class="text-3xl font-bold text-center mb-6 text-yellow-800">Create Account</h2>
+    <form id="signupForm" class="flex flex-col gap-4">
+      <input type="text" placeholder="Full Name" 
+      class="p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500" required>
+      <input type="email" placeholder="Email" 
+      class="p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500" required>
+      <div class="relative">
+        <input type="password" placeholder="Password" 
+        id="signupPassword" 
+        class="p-2 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-yellow-500" 
+        required>
+
+        <i class="fa-solid fa-eye absolute right-3 top-2 cursor-pointer text-gray-400" 
+        onclick="togglePassword('signupPassword', this)">
+      </i>
+      </div>
+
+      <div class="relative">
+        <input type="password" placeholder="Confirm Password" id="signupConfirm" 
+        class="p-2 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-yellow-500" required>
+        <i class="fa-solid fa-eye absolute right-3 top-2 cursor-pointer text-gray-400" 
+        onclick="togglePassword('signupConfirm', this)">
+      </i>
+      </div>
+      <p id="errorMsg" class="text-red-500 text-sm hidden"></p>
+      <button type="submit" class="bg-yellow-500 text-white p-2 rounded-lg hover:bg-yellow-600 transition">Sign Up</button>
+    </form>
+    
+    <p class="text-center mt-4 text-gray-700">
+      Already have an account? <a href="login.html" class="text-yellow-700 hover:underline">Login</a>
+    </p>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="fixed top-5 right-5 flex flex-col gap-2 z-50"></div>
+
+  <script>
+    // Toggle password visibility
+    function togglePassword(inputId, icon) {
+      const input = document.getElementById(inputId);
+      if (input.type === "password") {
+        input.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+      } else {
+        input.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+      }
+    }
+
+    // Toast function
+    function showToast(message, type = "success") {
+      const toastContainer = document.getElementById("toastContainer");
+      const toast = document.createElement("div");
+      toast.className = `
+        px-4 py-3 rounded-lg shadow-lg text-white font-medium transform translate-x-20 opacity-0 transition-all duration-500
+        ${type === "success" ? "bg-green-500" : "bg-red-500"}
+      `;
+      toast.textContent = message;
+      toastContainer.appendChild(toast);
+
+      // Slide in
+      setTimeout(() => {
+        toast.classList.remove("translate-x-20", "opacity-0");
+        toast.classList.add("translate-x-0", "opacity-100");
+      }, 50);
+
+      // Slide out after 3s
+      setTimeout(() => {
+        toast.classList.remove("translate-x-0", "opacity-100");
+        toast.classList.add("translate-x-20", "opacity-0");
+        setTimeout(() => toast.remove(), 500);
+      }, 3000);
+    }
+
+    // Signup form validation
+    document.getElementById("signupForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const password = document.getElementById("signupPassword").value;
+      const confirm = document.getElementById("signupConfirm").value;
+      const errorMsg = document.getElementById("errorMsg");
+
+      if(password.length < 8) {
+        errorMsg.textContent = "Password must be at least 8 characters long!";
+        errorMsg.classList.remove("hidden");
+        showToast("Password too short!", "error");
+        return;
+      }
+
+      if(password !== confirm) {
+        errorMsg.textContent = "Passwords do not match!";
+        errorMsg.classList.remove("hidden");
+        showToast("Passwords do not match!", "error");
+        return;
+      }
+
+      // If validation passes
+      errorMsg.classList.add("hidden");
+      showToast("Sign Up successful!", "success");
+      this.reset();
+    });
+  </script>
+</body>
+</html>
+
+
